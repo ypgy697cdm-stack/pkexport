@@ -1,0 +1,9 @@
+ID,DRAW_TIME_HR,CONC_MGL,LABEL
+P01,31.5,9.8,trough
+P01,33,72.4,peak
+P02,29.75,18.2,trough
+P02,32,41.5,random
+P03,33.75,14.1,trough
+P03,35,88.0,peak
+P04,33,52.6,trough
+P04,43.75,21.3,trough
