@@ -70,8 +70,3 @@ standardize_pk_data <- function(doses, levels, covariates) {
                             AGE, SEX, WT_KG, SCR_MGDL)
   as.data.frame(all_rows)
 }
-
-# Tells R CMD check these are column names, not missing variables
-utils::globalVariables(c("DOSE_TIME_HR", "AMT_MG", "INF_DUR_HR", "DRAW_TIME_HR",
-                         "CONC_MGL", "ID", "CLOCK", "EVENT", "TIME", "AMT",
-                         "DUR", "CONC", "TAD", "AGE", "SEX", "WT_KG", "SCR_MGDL"))
