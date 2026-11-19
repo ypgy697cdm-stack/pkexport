@@ -3,7 +3,7 @@ Title: Clean Raw Clinical PK Data into a Standard Table
 Version: 0.1.0
 Authors@R: c(
     person("Charlie", "Salow", role = c("aut", "cre"), email = "charlessalow@gmail.com"),
-    person("Shiva", "", role = "aut"))
+    person("Shiva", "Kannayiram", role = "aut"))
 Description: Takes raw dose, drug level, and covariate tables and combines them
     into one standard table with time since first dose (TIME) and time after
     the most recent dose (TAD), ready for export to Monolix.

@@ -47,4 +47,56 @@ std[std$EVENT == "level", c("ID", "TIME", "TAD")]
 
 ## Exporting to Monolix with to_monolix()
 
-(Shiva's section)
+Once the raw tables are combined into the standard table, `to_monolix()`
+turns that table into a data file that Monolix can read. It does not change
+any values. It only renames, recodes and reorders columns.
+
+```{r monolix-std}
+std <- standardize_pk_data(pk_doses, pk_levels, pk_covariates)
+mlx <- to_monolix(std)
+head(mlx, 8)
+```
+
+### How the columns are coded
+
+| Monolix column | Comes from | Dose rows | Level rows |
+|---|---|---|---|
+| ID | ID | patient ID | patient ID |
+| TIME | TIME | hours since first dose | hours since first dose |
+| AMT | AMT | dose in mg | empty |
+| TINF | DUR | infusion length in hours | empty |
+| DV | CONC | empty | concentration in mg/L |
+| EVID | EVENT | 1 | 0 |
+| MDV | EVENT | 1 | 0 |
+| AGE, SEX, WT_KG, SCR_MGDL | covariates | repeated on every row | repeated on every row |
+
+EVENT and TAD are dropped, because Monolix works out the dosing history
+itself from AMT, TINF and EVID. EVID = 1 marks a dose (an event that changes
+the amount of drug), and MDV = 1 tells Monolix there is no observation on
+that row.
+
+The example data have the same number of rows before and after export, one
+row per dose or level:
+
+```{r monolix-check}
+nrow(std)
+nrow(mlx)
+table(mlx$EVID)
+```
+
+### Writing the file
+
+Give `to_monolix()` a file path to save the table as a .csv file. Empty cells
+are written as `"."`, which Monolix reads as missing.
+
+```{r monolix-file}
+out_file <- tempfile(fileext = ".csv")
+mlx <- to_monolix(std, file = out_file)
+readLines(out_file, n = 5)
+```
+
+In Monolix, load this file as a new data set and assign the column types:
+ID as **ID**, TIME as **TIME**, AMT as **AMOUNT**, TINF as **INFUSION DURATION**,
+DV as **OBSERVATION**, EVID as **EVENT ID**, MDV as **MISSING DEPENDENT VARIABLE**,
+WT_KG, AGE and SCR_MGDL as **CONTINUOUS COVARIATE**, and SEX as
+**CATEGORICAL COVARIATE**.
