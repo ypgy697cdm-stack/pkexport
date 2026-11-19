@@ -7,7 +7,7 @@
 to_monolix(data, file = NULL)
 }
 \arguments{
-\item{data}{The standard table from \code{\link[=standardize_pk_data]{standardize_pk_data()}}. It must have
+\item{data}{The standard table from standardize_pk_data(). It must have
 the columns ID, TIME, EVENT ("dose" or "level"), AMT, DUR and CONC.
 All other columns except TAD (AGE, SEX, WT_KG, SCR_MGDL) are kept as
 covariates.}
@@ -16,19 +16,16 @@ covariates.}
 If NULL (the default), no file is written and the table is only returned.}
 }
 \value{
-A data frame with the columns ID, TIME, AMT, TINF, DV, EVID, MDV,
-and then the covariates, in that order.
+A data frame with the columns ID, TIME, AMT, TINF, DV, EVID, MDV and
+then the covariates, in that order.
 }
 \description{
-Takes the standard table made by \code{\link[=standardize_pk_data]{standardize_pk_data()}} and turns it into
+Takes the standard table made by standardize_pk_data() and turns it into
 the format Monolix reads: one row per dose or level, with ID, TIME, AMT,
-TINF, DV, EVID and MDV columns, followed by the covariates.
-}
-\details{
-Dose rows get EVID = 1 and MDV = 1; level rows get EVID = 0 and MDV = 0.
-CONC is renamed to DV and DUR is renamed to TINF (infusion duration in
-hours). EVENT and TAD are dropped because Monolix does not need them.
-Empty cells are written as "." in the file.
+TINF, DV, EVID and MDV columns, followed by any covariates. Dose rows get
+EVID = 1 and MDV = 1; level rows get EVID = 0 and MDV = 0. CONC is renamed
+to DV and DUR is renamed to TINF. EVENT and TAD are dropped because
+Monolix does not need them. Empty cells are written as "." in the file.
 }
 \examples{
 std <- standardize_pk_data(pk_doses, pk_levels, pk_covariates)
@@ -36,5 +33,7 @@ to_monolix(std)
 
 # write the file for Monolix
 to_monolix(std, file = tempfile(fileext = ".csv"))
-
+}
+\author{
+Shiva
 }

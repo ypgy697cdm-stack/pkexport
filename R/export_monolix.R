@@ -7,11 +7,10 @@
 #' to DV and DUR is renamed to TINF. EVENT and TAD are dropped because
 #' Monolix does not need them. Empty cells are written as "." in the file.
 #'
-#' @title Export the standard PK table for Monolix
 #' @param data The standard table from standardize_pk_data(). It must have
 #'   the columns ID, TIME, EVENT ("dose" or "level"), AMT, DUR and CONC.
-#'   Any other columns except TAD (for example WT, AGE, SEX, SCR) are kept
-#'   as covariates.
+#'   All other columns except TAD (AGE, SEX, WT_KG, SCR_MGDL) are kept as
+#'   covariates.
 #' @param file Path of the .csv file to write, for example "monolix_data.csv".
 #'   If NULL (the default), no file is written and the table is only returned.
 #' @return A data frame with the columns ID, TIME, AMT, TINF, DV, EVID, MDV and
@@ -21,17 +20,11 @@
 #' @import readr
 #' @export
 #' @examples
-#' std <- data.frame(
-#'   ID    = c("P01", "P01", "P01"),
-#'   TIME  = c(0, 23.5, 25),
-#'   EVENT = c("dose", "level", "level"),
-#'   AMT   = c(2000, NA, NA),
-#'   DUR   = c(0.5, NA, NA),
-#'   CONC  = c(NA, 9.8, 72.4),
-#'   TAD   = c(NA, 7.5, 1),
-#'   WT    = c(82, 82, 82)
-#' )
+#' std <- standardize_pk_data(pk_doses, pk_levels, pk_covariates)
 #' to_monolix(std)
+#'
+#' # write the file for Monolix
+#' to_monolix(std, file = tempfile(fileext = ".csv"))
 to_monolix <- function(data, file = NULL) {
 
   # 1. check the input
