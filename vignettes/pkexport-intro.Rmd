@@ -2,7 +2,7 @@
 title: "Getting started with pkexport"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{pkexport-intro}
+  %\VignetteIndexEntry{Getting started with pkexport}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,7 +21,29 @@ This vignette shows how to go from raw clinical PK tables to a file ready for Mo
 
 ## Cleaning raw data with standardize_pk_data()
 
-(Charlie's section)
+Clinical PK data usually arrive as three separate tables: doses, drug levels, and patient covariates. The package includes a small made-up example of each, for 4 patients on IV cefepime. Times are hours since midnight on each patient's first dosing day.
+
+```{r}
+head(pk_doses)
+head(pk_levels)
+pk_covariates
+```
+
+`standardize_pk_data()` stacks doses and levels into one table sorted by patient and time, then adds two columns:
+
+- `TIME`: hours since that patient's first dose
+- `TAD`: hours since the most recent dose (level rows only)
+
+```{r}
+std <- standardize_pk_data(pk_doses, pk_levels, pk_covariates)
+head(std, 8)
+```
+
+Two patients show why TAD matters. Patient P03's third dose was given 1.5 hours late, so the trough's TAD is 6.25 hours instead of the scheduled 7.75. Patient P04 has a level labeled "trough" that was actually drawn 0.75 hours after a dose.
+
+```{r}
+std[std$EVENT == "level", c("ID", "TIME", "TAD")]
+```
 
 ## Exporting to Monolix with to_monolix()
 
